@@ -1,0 +1,2 @@
+export { PropertyInfo } from './PropertyInfo'
+

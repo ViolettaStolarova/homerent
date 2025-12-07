@@ -1,0 +1,92 @@
+@import '../login-form/LoginForm.module.scss';
+
+.formContainer {
+	background: white;
+	padding: 40px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+	text-align: center;
+	margin-bottom: 30px;
+	font-size: 28px;
+	color: #333;
+}
+
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
+}
+
+.field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+
+	label {
+		font-size: 14px;
+		font-weight: 500;
+		color: #333;
+	}
+
+	input {
+		padding: 12px;
+		border: 1px solid #ddd;
+		border-radius: 4px;
+		font-size: 14px;
+
+		&:focus {
+			outline: none;
+			border-color: #8d99ae;
+		}
+	}
+}
+
+.error {
+	color: #ff5a5f;
+	font-size: 12px;
+}
+
+.errorMessage {
+	color: #ff5a5f;
+	font-size: 14px;
+	text-align: center;
+}
+
+.button {
+	padding: 12px;
+	background: #2b2d42;
+	color: #edf2f4;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.2s;
+
+	&:hover:not(:disabled) {
+		background: #1a1c2e;
+	}
+
+	&:disabled {
+		opacity: 0.6;
+		cursor: not-allowed;
+	}
+}
+
+.links {
+	text-align: center;
+	margin-top: 10px;
+
+	a {
+		color: #2b2d42;
+		text-decoration: none;
+		font-size: 14px;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

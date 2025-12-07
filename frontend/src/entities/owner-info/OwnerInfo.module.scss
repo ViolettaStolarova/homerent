@@ -1,0 +1,41 @@
+.ownerInfo {
+  padding: 20px 0;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+
+  h3 {
+    font-size: 22px;
+    margin-bottom: 15px;
+    color: #333;
+  }
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  background: #667eea;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.since {
+  font-size: 14px;
+  color: #666;
+}
+

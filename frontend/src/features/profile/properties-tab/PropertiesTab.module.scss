@@ -1,0 +1,106 @@
+.tab {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.addButton {
+  padding: 10px 20px;
+  background: #ff5a5f;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+
+  &:hover {
+    background: #ff3b40;
+  }
+}
+
+.properties {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.propertyCard {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+}
+
+.image {
+  width: 200px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.stats {
+  display: flex;
+  gap: 20px;
+  color: #666;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.editButton {
+  padding: 8px 16px;
+  background: #667eea;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 14px;
+
+  &:hover {
+    background: #5568d3;
+  }
+}
+
+.deleteButton {
+  padding: 8px 16px;
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:hover {
+    background: #d32f2f;
+  }
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+
+  p {
+    margin-bottom: 20px;
+    color: #666;
+  }
+}
+

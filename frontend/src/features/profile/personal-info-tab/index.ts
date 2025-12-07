@@ -1,0 +1,2 @@
+export { PersonalInfoTab } from './PersonalInfoTab'
+

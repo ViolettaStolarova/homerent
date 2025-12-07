@@ -1,0 +1,44 @@
+.form {
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.fields {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+	gap: 15px;
+	background: white;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.input {
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+}
+
+.priceRange {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	grid-column: span 2;
+}
+
+.button {
+	padding: 12px 30px;
+	background: #2b2d42;
+	color: #edf2f4;
+	border: none;
+	border-radius: 4px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: background-color 0.2s;
+
+	&:hover {
+		background: #1a1c2e;
+	}
+}

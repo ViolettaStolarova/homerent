@@ -1,0 +1,2 @@
+export { PropertyGallery } from './PropertyGallery'
+

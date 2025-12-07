@@ -1,0 +1,2 @@
+export { BookingsTab } from './BookingsTab'
+

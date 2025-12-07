@@ -1,0 +1,2 @@
+export { TermsPage } from './TermsPage'
+

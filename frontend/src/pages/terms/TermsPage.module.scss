@@ -1,0 +1,52 @@
+.termsPage {
+  min-height: calc(100vh - 80px);
+  background: #edf2f4;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 36px;
+  color: #2b2d42;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+.section {
+  margin-bottom: 30px;
+
+  h2 {
+    font-size: 22px;
+    color: #2b2d42;
+    margin-bottom: 15px;
+    margin-top: 30px;
+  }
+
+  p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #2b2d42;
+    margin-bottom: 12px;
+  }
+}
+
+.lastUpdated {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #8d99ae;
+  text-align: center;
+
+  p {
+    font-size: 14px;
+    color: #8d99ae;
+  }
+}
+

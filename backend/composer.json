@@ -1,0 +1,15 @@
+{
+    "name": "homerent/backend",
+    "description": "Homerent backend API",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "firebase/php-jwt": "^6.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    }
+}
+

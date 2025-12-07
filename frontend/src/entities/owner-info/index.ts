@@ -1,0 +1,2 @@
+export { OwnerInfo } from './OwnerInfo'
+
