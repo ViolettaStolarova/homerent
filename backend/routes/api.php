@@ -1,6 +1,5 @@
 <?php
 
-use App\Router\Router;
 use App\Middleware\AuthMiddleware;
 use App\Middleware\AdminMiddleware;
 
@@ -45,4 +44,3 @@ $router->post('/api/reviews', 'ReviewController@create', AuthMiddleware::class);
 $router->get('/api/admin/stats', 'AdminController@stats', AdminMiddleware::class);
 $router->get('/api/admin/export', 'AdminController@export', AdminMiddleware::class);
 $router->put('/api/admin/users/{id}/block', 'AdminController@blockUser', AdminMiddleware::class);
-

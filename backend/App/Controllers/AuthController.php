@@ -20,7 +20,7 @@ class AuthController {
             $user = $this->authService->register($data);
             
             http_response_code(201);
-            echo json_encode(['message' => 'Registration successful. Please verify your email.', 'user' => $user]);
+            echo json_encode(['message' => 'Registration successful.', 'user' => $user]);
         } catch (\PDOException $e) {
             http_response_code(400);
             if ($e->getCode() == 23000) {
@@ -46,7 +46,9 @@ class AuthController {
             $data = json_decode(file_get_contents('php://input'), true);
             
             if (empty($data['email']) || empty($data['password'])) {
-                throw new \Exception('Email и пароль обязательны');
+                http_response_code(400);
+                echo json_encode(['error' => 'Email и пароль обязательны']);
+                return;
             }
             
             $result = $this->authService->login($data['email'], $data['password']);
@@ -57,75 +59,19 @@ class AuthController {
                 return;
             }
             
+            http_response_code(200);
             echo json_encode($result);
+        } catch (\PDOException $e) {
+            http_response_code(500);
+            error_log('Login PDO error: ' . $e->getMessage());
+            echo json_encode(['error' => 'Ошибка базы данных. Попробуйте позже.']);
         } catch (\Exception $e) {
-            http_response_code(400);
+            http_response_code(500);
+            error_log('Login error: ' . $e->getMessage());
             echo json_encode(['error' => $e->getMessage()]);
         }
     }
 
-    public function verifyEmail() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            if (empty($data['token'])) {
-                throw new \Exception('Token is required');
-            }
-            
-            $success = $this->authService->verifyEmail($data['token']);
-            
-            if (!$success) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid token']);
-                return;
-            }
-            
-            echo json_encode(['message' => 'Email verified successfully']);
-        } catch (\Exception $e) {
-            http_response_code(400);
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function forgotPassword() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            if (empty($data['email'])) {
-                throw new \Exception('Email is required');
-            }
-            
-            $this->authService->forgotPassword($data['email']);
-            
-            echo json_encode(['message' => 'If email exists, reset link has been sent']);
-        } catch (\Exception $e) {
-            http_response_code(400);
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-    }
-
-    public function resetPassword() {
-        try {
-            $data = json_decode(file_get_contents('php://input'), true);
-            
-            if (empty($data['token']) || empty($data['password'])) {
-                throw new \Exception('Token and password are required');
-            }
-            
-            $success = $this->authService->resetPassword($data['token'], $data['password']);
-            
-            if (!$success) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid or expired token']);
-                return;
-            }
-            
-            echo json_encode(['message' => 'Password reset successfully']);
-        } catch (\Exception $e) {
-            http_response_code(400);
-            echo json_encode(['error' => $e->getMessage()]);
-        }
-    }
 
     public function me() {
         $user = $_SESSION['user'] ?? null;

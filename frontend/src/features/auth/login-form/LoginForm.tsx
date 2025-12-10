@@ -30,7 +30,6 @@ export function LoginForm() {
 			window.location.reload()
 		} catch (err: any) {
 			console.error('Login error:', err)
-			// Error is already handled by RTK Query and displayed in the form
 		}
 	}
 

@@ -28,4 +28,3 @@ class AuthMiddleware {
         return true;
     }
 }
-
