@@ -15,6 +15,7 @@ $router->get('/api/auth/me', 'AuthController@me', AuthMiddleware::class);
 $router->get('/api/properties', 'PropertyController@index');
 $router->get('/api/properties/{id}', 'PropertyController@show');
 $router->post('/api/properties', 'PropertyController@create', AuthMiddleware::class);
+$router->post('/api/properties/upload-image', 'PropertyController@uploadImage', AuthMiddleware::class);
 $router->put('/api/properties/{id}', 'PropertyController@update', AuthMiddleware::class);
 $router->delete('/api/properties/{id}', 'PropertyController@delete', AuthMiddleware::class);
 

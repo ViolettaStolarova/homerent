@@ -6,7 +6,6 @@ use App\Services\AuthService;
 
 class AuthMiddleware {
     public function handle() {
-        // Try multiple ways to get Authorization header (Apache may not set HTTP_AUTHORIZATION)
         $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
         if (empty($authHeader) && function_exists('getallheaders')) {
             $headers = getallheaders();

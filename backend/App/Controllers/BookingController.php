@@ -24,8 +24,9 @@ class BookingController {
         
         if ($type === 'incoming') {
             $sql = "
-                SELECT b.*, p.title, p.main_image, p.price_per_night,
-                       u.full_name as guest_name, u.email as guest_email
+                SELECT b.*, p.title, p.price_per_night,
+                       u.full_name as guest_name, u.email as guest_email,
+                       (SELECT image_url FROM property_images WHERE property_id = p.id AND is_main = 1 LIMIT 1) as main_image
                 FROM bookings b
                 JOIN properties p ON b.property_id = p.id
                 JOIN users u ON b.user_id = u.id
@@ -34,8 +35,9 @@ class BookingController {
             $params = [$user['id']];
         } else {
             $sql = "
-                SELECT b.*, p.title, p.main_image, p.price_per_night,
-                       u.full_name as owner_name
+                SELECT b.*, p.title, p.price_per_night,
+                       u.full_name as owner_name,
+                       (SELECT image_url FROM property_images WHERE property_id = p.id AND is_main = 1 LIMIT 1) as main_image
                 FROM bookings b
                 JOIN properties p ON b.property_id = p.id
                 JOIN users u ON p.owner_id = u.id

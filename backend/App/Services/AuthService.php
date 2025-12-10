@@ -20,7 +20,7 @@ class AuthService {
         $password = password_hash($data['password'], PASSWORD_DEFAULT);
         $fullName = $data['full_name'];
         $username = $data['username'] ?? $email;
-
+        
         $stmt = $this->db->prepare("
             INSERT INTO users (email, password, full_name, username, email_verified, created_at)
             VALUES (?, ?, ?, ?, 1, NOW())
@@ -46,40 +46,40 @@ class AuthService {
 
     public function login($email, $password) {
         try {
-            $stmt = $this->db->prepare("
+        $stmt = $this->db->prepare("
                 SELECT id, email, password, full_name, username, role, blocked
-                FROM users 
-                WHERE email = ?
-            ");
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
+            FROM users 
+            WHERE email = ?
+        ");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
 
-            if (!$user) {
+        if (!$user) {
                 error_log("AuthService login: user not found for email {$email}");
-                return null;
-            }
+            return null;
+        }
 
-            if (!password_verify($password, $user['password'])) {
+        if (!password_verify($password, $user['password'])) {
                 error_log("AuthService login: bad password for email {$email}");
-                return null;
-            }
+            return null;
+        }
 
-            if ($user['blocked']) {
-                throw new \Exception('Аккаунт заблокирован');
-            }
+        if ($user['blocked']) {
+            throw new \Exception('Аккаунт заблокирован');
+        }
 
-            $token = $this->generateToken($user);
-            
-            return [
-                'token' => $token,
-                'user' => [
-                    'id' => $user['id'],
-                    'email' => $user['email'],
-                    'full_name' => $user['full_name'],
-                    'username' => $user['username'],
-                    'role' => $user['role']
-                ]
-            ];
+        $token = $this->generateToken($user);
+        
+        return [
+            'token' => $token,
+            'user' => [
+                'id' => $user['id'],
+                'email' => $user['email'],
+                'full_name' => $user['full_name'],
+                'username' => $user['username'],
+                'role' => $user['role']
+            ]
+        ];
         } catch (\Exception $e) {
             error_log('AuthService login error: ' . $e->getMessage());
             throw $e;
@@ -111,7 +111,7 @@ class AuthService {
         ];
 
         try {
-            return JWT::encode($payload, $this->config['jwt_secret'], 'HS256');
+        return JWT::encode($payload, $this->config['jwt_secret'], 'HS256');
         } catch (\Exception $e) {
             error_log('JWT encode error: ' . $e->getMessage());
             throw new \Exception('Failed to generate authentication token');

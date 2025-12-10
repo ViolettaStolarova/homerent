@@ -26,20 +26,6 @@ class ReviewController {
                 throw new \Exception('Property ID and rating are required');
             }
             
-            // Check if user has completed booking for this property
-            $stmt = $this->db->prepare("
-                SELECT id FROM bookings
-                WHERE user_id = ? AND property_id = ? AND status = 'completed'
-            ");
-            $stmt->execute([$user['id'], $data['property_id']]);
-            $booking = $stmt->fetch();
-            
-            if (!$booking) {
-                http_response_code(400);
-                echo json_encode(['error' => 'You can only review properties you have booked']);
-                return;
-            }
-            
             // Check if already reviewed
             $stmt = $this->db->prepare("
                 SELECT id FROM reviews WHERE user_id = ? AND property_id = ?

@@ -340,6 +340,137 @@ class PropertyController {
         }
     }
 
+    public function uploadImage() {
+        error_log('uploadImage called');
+        error_log('POST data: ' . print_r($_POST, true));
+        error_log('FILES data: ' . print_r($_FILES, true));
+        
+        $user = $_SESSION['user'] ?? null;
+        if (!$user) {
+            error_log('uploadImage: No user in session');
+            http_response_code(401);
+            echo json_encode(['error' => 'Unauthorized']);
+            return;
+        }
+        
+        if (!isset($_FILES['image'])) {
+            error_log('uploadImage: No FILES[image] set');
+            http_response_code(400);
+            echo json_encode(['error' => 'No file uploaded']);
+            return;
+        }
+        
+        if ($_FILES['image']['error'] !== UPLOAD_ERR_OK) {
+            error_log('uploadImage: Upload error code: ' . $_FILES['image']['error']);
+            http_response_code(400);
+            echo json_encode(['error' => 'Upload error: ' . $_FILES['image']['error']]);
+            return;
+        }
+        
+        $file = $_FILES['image'];
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        $maxSize = 10 * 1024 * 1024; // 10MB
+        
+        if (!in_array($file['type'], $allowedTypes)) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed']);
+            return;
+        }
+        
+        if ($file['size'] > $maxSize) {
+            http_response_code(400);
+            echo json_encode(['error' => 'File size exceeds 10MB limit']);
+            return;
+        }
+        
+        // Use absolute path to uploads directory
+        // PropertyController is in App/Controllers, so go up to backend root
+        $basePath = __DIR__ . '/../../uploads/';
+        
+        // Resolve the path
+        $resolvedPath = realpath(dirname($basePath));
+        if ($resolvedPath === false) {
+            // Directory doesn't exist, try to create it
+            $resolvedPath = dirname($basePath);
+            if (!is_dir($resolvedPath)) {
+                if (!mkdir($resolvedPath, 0755, true)) {
+                    error_log('Failed to create upload directory parent: ' . $resolvedPath);
+                    http_response_code(500);
+                    echo json_encode(['error' => 'Failed to create upload directory']);
+                    return;
+                }
+            }
+            $resolvedPath = realpath($resolvedPath);
+        }
+        
+        $uploadPath = $resolvedPath . '/uploads/';
+        
+        // Create uploads directory if it doesn't exist
+        if (!is_dir($uploadPath)) {
+            if (!mkdir($uploadPath, 0777, true)) {
+                error_log('Failed to create upload directory: ' . $uploadPath);
+                error_log('Parent directory: ' . $resolvedPath);
+                error_log('Parent is writable: ' . (is_writable($resolvedPath) ? 'yes' : 'no'));
+                http_response_code(500);
+                echo json_encode(['error' => 'Failed to create upload directory']);
+                return;
+            }
+        }
+        
+        // Check if directory is writable
+        if (!is_writable($uploadPath)) {
+            error_log('Upload directory is not writable: ' . $uploadPath);
+            error_log('Directory owner: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(fileowner($uploadPath))['name'] : 'unknown'));
+            error_log('Directory permissions: ' . substr(sprintf('%o', fileperms($uploadPath)), -4));
+            error_log('Current user: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'unknown'));
+            
+            // Try to make it writable with full permissions
+            if (@chmod($uploadPath, 0777)) {
+                error_log('Successfully changed permissions to 0777');
+            } else {
+                error_log('Failed to change permissions. Trying parent directory...');
+                $parentDir = dirname($uploadPath);
+                @chmod($parentDir, 0777);
+                @chmod($uploadPath, 0777);
+            }
+            
+            // Check again
+            if (!is_writable($uploadPath)) {
+                error_log('Still not writable after chmod attempt');
+                http_response_code(500);
+                echo json_encode([
+                    'error' => 'Upload directory is not writable. Please run: chmod -R 777 ' . $uploadPath
+                ]);
+                return;
+            }
+        }
+        
+        // Generate unique filename
+        $extension = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $filename = uniqid('img_', true) . '_' . time() . '.' . $extension;
+        $filepath = $uploadPath . $filename;
+        
+        error_log('Attempting to save file: ' . $filepath);
+        error_log('Temp file: ' . $file['tmp_name']);
+        error_log('File exists: ' . (file_exists($file['tmp_name']) ? 'yes' : 'no'));
+        
+        if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+            $error = error_get_last();
+            error_log('Failed to move uploaded file. Error: ' . ($error ? $error['message'] : 'Unknown'));
+            error_log('Upload path: ' . $uploadPath);
+            error_log('File path: ' . $filepath);
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to save file. Check server logs for details.']);
+            return;
+        }
+        
+        // Return URL relative to backend
+        $baseUrl = $config['base_url'];
+        $imageUrl = $baseUrl . 'backend/uploads/' . $filename;
+        
+        echo json_encode(['url' => $imageUrl]);
+    }
+
     private function saveImages($propertyId, $images) {
         $stmt = $this->db->prepare("
             INSERT INTO property_images (property_id, image_url, is_main) VALUES (?, ?, ?)
@@ -371,8 +502,9 @@ class PropertyController {
             }
         }
         
-        if (strlen($data['description']) < 500) {
-            throw new \Exception('Description must be at least 500 characters');
+        $descLength = strlen($data['description']);
+        if ($descLength < 20 || $descLength > 600) {
+            throw new \Exception('Description must be between 20 and 600 characters');
         }
     }
 }
