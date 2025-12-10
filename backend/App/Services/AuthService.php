@@ -55,10 +55,12 @@ class AuthService {
             $user = $stmt->fetch();
 
             if (!$user) {
+                error_log("AuthService login: user not found for email {$email}");
                 return null;
             }
 
             if (!password_verify($password, $user['password'])) {
+                error_log("AuthService login: bad password for email {$email}");
                 return null;
             }
 
@@ -85,11 +87,18 @@ class AuthService {
     }
 
     public function generateToken($user) {
+        if (!class_exists(JWT::class) || !class_exists(Key::class)) {
+            error_log('JWT classes not loaded. Ensure vendor/autoload.php is required.');
+            throw new \Exception('JWT library not loaded');
+        }
+
         if (empty($this->config['jwt_secret'])) {
+            error_log('JWT secret missing in config.php');
             throw new \Exception('JWT secret is not configured');
         }
         
         if (empty($user['id']) || empty($user['email']) || empty($user['role'])) {
+            error_log('Invalid user data for token generation: ' . json_encode($user));
             throw new \Exception('Invalid user data for token generation');
         }
         
@@ -111,7 +120,23 @@ class AuthService {
 
     public function validateToken($token) {
         try {
+            if (empty($token)) {
+                error_log('validateToken: Empty token provided');
+                return null;
+            }
+            
+            if (empty($this->config['jwt_secret'])) {
+                error_log('validateToken: JWT secret is empty');
+                return null;
+            }
+            
+            if (!class_exists('Firebase\JWT\JWT')) {
+                error_log('validateToken: JWT class not found');
+                return null;
+            }
+            
             $decoded = JWT::decode($token, new Key($this->config['jwt_secret'], 'HS256'));
+            error_log('validateToken: Token decoded successfully, user_id: ' . ($decoded->user_id ?? 'null'));
             
             $stmt = $this->db->prepare("
                 SELECT id, email, full_name, username, role, blocked
@@ -121,8 +146,13 @@ class AuthService {
             $stmt->execute([$decoded->user_id]);
             $user = $stmt->fetch();
             
+            if (!$user) {
+                error_log('validateToken: User not found or blocked, id: ' . ($decoded->user_id ?? 'null'));
+            }
+            
             return $user ?: null;
         } catch (\Exception $e) {
+            error_log('validateToken error: ' . $e->getMessage() . ' | Class: ' . get_class($e));
             return null;
         }
     }

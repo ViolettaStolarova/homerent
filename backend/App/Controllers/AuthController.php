@@ -50,6 +50,7 @@ class AuthController {
                 echo json_encode(['error' => 'Email и пароль обязательны']);
                 return;
             }
+            error_log('Login attempt for email: ' . $data['email']);
             
             $result = $this->authService->login($data['email'], $data['password']);
             

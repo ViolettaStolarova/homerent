@@ -13,6 +13,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// Load Composer autoload if present (needed for JWT). If not present, continue but log.
+$vendorAutoload = __DIR__ . '/vendor/autoload.php';
+if (file_exists($vendorAutoload)) {
+    require_once $vendorAutoload;
+} else {
+    error_log('Warning: vendor/autoload.php not found. JWT may fail. Install composer deps in backend.');
+}
+
 require_once __DIR__ . '/config/database.php';
 require_once __DIR__ . '/config/autoload.php';
 
