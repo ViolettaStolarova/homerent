@@ -30,12 +30,22 @@ export const adminApi = api.injectEndpoints({
     getStats: builder.query<AdminStats, void>({
       query: () => '/admin/stats',
     }),
-    exportData: builder.query<void, ExportParams>({
+    exportData: builder.mutation<Blob, ExportParams>({
       query: (params) => ({
         url: '/admin/export',
         params,
-        responseHandler: (response) => response.blob(),
+        responseHandler: async (response) => {
+          const contentType = response.headers.get('content-type') || '';
+          if (contentType.includes('application/json')) {
+            // If error response, parse as JSON
+            const text = await response.text();
+            throw new Error(text);
+          }
+          return response.blob();
+        },
       }),
+      // Don't cache blob responses
+      keepUnusedDataFor: 0,
     }),
     blockUser: builder.mutation<{ message: string }, { id: number; data: BlockUserRequest }>({
       query: ({ id, data }) => ({
@@ -49,7 +59,7 @@ export const adminApi = api.injectEndpoints({
 
 export const {
   useGetStatsQuery,
-  useLazyExportDataQuery,
+  useExportDataMutation,
   useBlockUserMutation,
 } = adminApi
 

@@ -2,11 +2,13 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { useState } from 'react'
 import { PropertyType, Amenity } from '@/shared/types'
 import {
 	useGetPropertyQuery,
 	useCreatePropertyMutation,
 	useUpdatePropertyMutation,
+	useUploadImageMutation,
 } from '@/shared/api/properties'
 import styles from './PropertyFormPage.module.scss'
 
@@ -15,7 +17,8 @@ const schema = yup.object({
 	title: yup.string().required('Заголовок обязателен'),
 	description: yup
 		.string()
-		.min(500, 'Минимум 500 символов')
+		.min(20, 'Минимум 20 символов')
+		.max(600, 'Максимум 600 символов')
 		.required('Описание обязательно'),
 	address: yup.string().required('Адрес обязателен'),
 	city: yup.string().required('Город обязателен'),
@@ -38,6 +41,8 @@ export function PropertyFormPage() {
 	)
 	const [createProperty] = useCreatePropertyMutation()
 	const [updateProperty] = useUpdatePropertyMutation()
+	const [uploadImage] = useUploadImageMutation()
+	const [uploadingImages, setUploadingImages] = useState(false)
 
 	const {
 		register,
@@ -66,6 +71,58 @@ export function PropertyFormPage() {
 	})
 
 	const amenities = watch('amenities') || []
+	const images = watch('images') || []
+
+	const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files
+		if (!files || files.length === 0) {
+			console.log('No files selected')
+			return
+		}
+
+		console.log('Files selected:', files.length)
+
+		if (images.length + files.length > 15) {
+			alert('Максимум 15 фотографий')
+			return
+		}
+
+		setUploadingImages(true)
+		const uploadedUrls: string[] = []
+
+		try {
+			for (let i = 0; i < files.length; i++) {
+				const file = files[i]
+				console.log('Uploading file:', file.name, file.size, file.type)
+				if (file.size > 10 * 1024 * 1024) {
+					alert(`Файл ${file.name} превышает 10MB`)
+					continue
+				}
+				const result = await uploadImage(file).unwrap()
+				console.log('Upload result:', result)
+				uploadedUrls.push(result.url)
+			}
+			const newImages = [...images, ...uploadedUrls]
+			console.log('Setting images:', newImages)
+			setValue('images', newImages)
+		} catch (err) {
+			console.error('Image upload error:', err)
+			alert(
+				'Ошибка при загрузке изображений: ' + (err as any)?.data?.error ||
+					(err as any)?.message ||
+					'Unknown error'
+			)
+		} finally {
+			setUploadingImages(false)
+			e.target.value = ''
+		}
+	}
+
+	const removeImage = (index: number) => {
+		const newImages = [...images]
+		newImages.splice(index, 1)
+		setValue('images', newImages)
+	}
 
 	const toggleAmenity = (amenity: Amenity) => {
 		const current = amenities as string[]
@@ -146,7 +203,7 @@ export function PropertyFormPage() {
 							</div>
 
 							<div className={styles.field}>
-								<label>Описание (минимум 500 символов)</label>
+								<label>Описание (20-600 символов)</label>
 								<textarea {...register('description')} rows={6} />
 								{errors.description && (
 									<span className={styles.error}>
@@ -256,11 +313,26 @@ export function PropertyFormPage() {
 							multiple
 							accept='image/*'
 							className={styles.fileInput}
+							onChange={handleImageUpload}
+							disabled={uploadingImages || images.length >= 15}
 						/>
-						<p className={styles.note}>
-							Примечание: Загрузка файлов требует дополнительной реализации на
-							backend
-						</p>
+						{uploadingImages && <p>Загрузка изображений...</p>}
+						{images.length > 0 && (
+							<div className={styles.imagePreview}>
+								{images.map((url, index) => (
+									<div key={index} className={styles.imageItem}>
+										<img src={url} alt={`Preview ${index + 1}`} />
+										<button
+											type='button'
+											onClick={() => removeImage(index)}
+											className={styles.removeButton}
+										>
+											×
+										</button>
+									</div>
+								))}
+							</div>
+						)}
 					</div>
 
 					<button type='submit' className={styles.submitButton}>

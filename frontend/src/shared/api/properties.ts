@@ -73,6 +73,37 @@ export const propertiesApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Property'],
     }),
+    uploadImage: builder.mutation<{ url: string }, File>({
+      queryFn: async (file, _queryApi, _extraOptions, fetchWithBQ) => {
+        const formData = new FormData()
+        formData.append('image', file)
+        console.log('Sending FormData with file:', file.name, file.size, file.type)
+        
+        const token = localStorage.getItem('token')
+        const API_URL = import.meta.env.VITE_API_URL || 'http://localhost/homerent/api'
+        
+        try {
+          const response = await fetch(`${API_URL}/properties/upload-image`, {
+            method: 'POST',
+            headers: {
+              'Authorization': token ? `Bearer ${token}` : '',
+              // Don't set Content-Type - browser will set it with boundary
+            },
+            body: formData,
+          })
+          
+          if (!response.ok) {
+            const error = await response.json().catch(() => ({ error: 'Upload failed' }))
+            return { error: error }
+          }
+          
+          const data = await response.json()
+          return { data }
+        } catch (error: any) {
+          return { error: { status: 'CUSTOM_ERROR', error: error.message } }
+        }
+      },
+    }),
   }),
 })
 
@@ -82,5 +113,6 @@ export const {
   useCreatePropertyMutation,
   useUpdatePropertyMutation,
   useDeletePropertyMutation,
+  useUploadImageMutation,
 } = propertiesApi
 

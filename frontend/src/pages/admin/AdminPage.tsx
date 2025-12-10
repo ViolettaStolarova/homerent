@@ -1,24 +1,49 @@
 import { useState } from 'react'
-import { useGetStatsQuery, useLazyExportDataQuery } from '@/shared/api/admin'
+import { useGetStatsQuery, useExportDataMutation } from '@/shared/api/admin'
 import styles from './AdminPage.module.scss'
 
 export function AdminPage() {
   const { data: stats, isLoading } = useGetStatsQuery()
-  const [exportData, { isLoading: isExporting }] = useLazyExportDataQuery()
+  const [exportData, { isLoading: isExporting }] = useExportDataMutation()
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [format, setFormat] = useState<'csv' | 'xlsx' | 'pdf'>('csv')
 
   const handleExport = async () => {
+    if (!startDate || !endDate) {
+      alert('Пожалуйста, выберите начальную и конечную даты')
+      return
+    }
+    
     try {
-      const result = await exportData({
-        start_date: startDate || undefined,
-        end_date: endDate || undefined,
+      const blob = await exportData({
+        start_date: startDate,
+        end_date: endDate,
         format,
       }).unwrap()
-      // Handle file download
-    } catch (err) {
+      
+      // Create download link
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `homerent_export_${startDate}_${endDate}.${format}`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (err: any) {
       console.error('Export error:', err)
+      const errorMessage = err?.data?.error || err?.message || 'Ошибка при экспорте данных'
+      if (typeof errorMessage === 'string') {
+        try {
+          const parsed = JSON.parse(errorMessage)
+          alert(parsed.error || errorMessage)
+        } catch {
+          alert(errorMessage)
+        }
+      } else {
+        alert('Ошибка при экспорте данных')
+      }
     }
   }
 
@@ -76,7 +101,11 @@ export function AdminPage() {
                 <option value="pdf">PDF</option>
               </select>
             </div>
-            <button onClick={handleExport} disabled={isExporting} className={styles.exportButton}>
+            <button 
+              onClick={handleExport} 
+              disabled={isExporting || !startDate || !endDate} 
+              className={styles.exportButton}
+            >
               {isExporting ? 'Экспорт...' : 'Экспортировать'}
             </button>
           </div>
