@@ -54,7 +54,7 @@
 	input,
 	select,
 	textarea {
-		padding: 12px;
+		padding: 10px;
 		border: 1px solid #ddd;
 		border-radius: 4px;
 		font-size: 14px;
@@ -71,10 +71,10 @@
 	}
 }
 
-.grid {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 15px;
+.flex {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
 }
 
 .error {

@@ -228,7 +228,7 @@ export function PropertyFormPage() {
 								)}
 							</div>
 
-							<div className={styles.grid}>
+							<div className={styles.flex}>
 								<div className={styles.field}>
 									<label>Гостей</label>
 									<input
@@ -245,21 +245,23 @@ export function PropertyFormPage() {
 										{...register('bedrooms', { valueAsNumber: true })}
 									/>
 								</div>
-								<div className={styles.field}>
-									<label>Кроватей</label>
-									<input
-										type='number'
-										min='1'
-										{...register('beds', { valueAsNumber: true })}
-									/>
-								</div>
-								<div className={styles.field}>
-									<label>Ванных</label>
-									<input
-										type='number'
-										min='1'
-										{...register('bathrooms', { valueAsNumber: true })}
-									/>
+								<div className={styles.flex}>
+									<div className={styles.field}>
+										<label>Кроватей</label>
+										<input
+											type='number'
+											min='1'
+											{...register('beds', { valueAsNumber: true })}
+										/>
+									</div>
+									<div className={styles.field}>
+										<label>Ванных</label>
+										<input
+											type='number'
+											min='1'
+											{...register('bathrooms', { valueAsNumber: true })}
+										/>
+									</div>
 								</div>
 							</div>
 

@@ -41,10 +41,6 @@ export function PropertiesTab() {
 							/>
 							<div className={styles.content}>
 								<h3>{property.title}</h3>
-								<div className={styles.stats}>
-									<span>Просмотры: {property.review_count || 0}</span>
-									{/* <span>Бронирования: {property.booking_count || 0}</span> */}
-								</div>
 								<div className={styles.actions}>
 									<Link
 										to={`/property/edit/${property.id}`}

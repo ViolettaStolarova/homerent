@@ -7,7 +7,6 @@ import {
 } from '@/shared/api/users'
 import styles from './PersonalInfoTab.module.scss'
 
-// Define types for your forms
 interface ProfileFormData {
 	full_name?: string
 	username?: string
@@ -20,10 +19,8 @@ interface PasswordFormData {
 	new_password: string
 }
 
-// Define the profile type returned by the API
 interface ProfileData extends ProfileFormData {
 	id: number
-	// Add other fields that might exist
 }
 
 export function PersonalInfoTab() {
@@ -33,7 +30,6 @@ export function PersonalInfoTab() {
 		useChangePasswordMutation()
 	const [showPasswordForm, setShowPasswordForm] = useState(false)
 
-	// Type assertion for profile data
 	const typedProfile = profile as ProfileData | undefined
 
 	const {
@@ -43,7 +39,6 @@ export function PersonalInfoTab() {
 		reset,
 	} = useForm<ProfileFormData>()
 
-	// Reset form when profile data loads
 	useEffect(() => {
 		if (typedProfile) {
 			reset({
