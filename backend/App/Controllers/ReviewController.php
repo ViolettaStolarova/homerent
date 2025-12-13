@@ -26,7 +26,6 @@ class ReviewController {
                 throw new \Exception('Property ID and rating are required');
             }
             
-            // Check if already reviewed
             $stmt = $this->db->prepare("
                 SELECT id FROM reviews WHERE user_id = ? AND property_id = ?
             ");
@@ -34,7 +33,6 @@ class ReviewController {
             $existing = $stmt->fetch();
             
             if ($existing) {
-                // Update existing review
                 $stmt = $this->db->prepare("
                     UPDATE reviews SET rating = ?, comment = ?, updated_at = NOW()
                     WHERE id = ?
@@ -46,7 +44,6 @@ class ReviewController {
                 ]);
                 $reviewId = $existing['id'];
             } else {
-                // Create new review
                 $stmt = $this->db->prepare("
                     INSERT INTO reviews (user_id, property_id, rating, comment, created_at)
                     VALUES (?, ?, ?, ?, NOW())
@@ -60,7 +57,6 @@ class ReviewController {
                 $reviewId = $this->db->lastInsertId();
             }
             
-            // Recalculate property rating
             $this->updatePropertyRating($data['property_id']);
             
             http_response_code(201);
@@ -77,9 +73,5 @@ class ReviewController {
         ");
         $stmt->execute([$propertyId]);
         $result = $stmt->fetch();
-        
-        // Note: We don't store rating in properties table, we calculate it on the fly
-        // But if you want to cache it, you can update properties table here
     }
 }
-

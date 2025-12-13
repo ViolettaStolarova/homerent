@@ -7,7 +7,6 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Only set JSON content type if not uploading files
 if (empty($_FILES)) {
     header('Content-Type: application/json');
 }
@@ -17,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-// Load Composer autoload if present (needed for JWT). If not present, continue but log.
 $vendorAutoload = __DIR__ . '/vendor/autoload.php';
 if (file_exists($vendorAutoload)) {
     require_once $vendorAutoload;

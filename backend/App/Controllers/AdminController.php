@@ -12,23 +12,19 @@ class AdminController {
     }
 
     public function stats() {
-        // Total users
         $stmt = $this->db->query("SELECT COUNT(*) as total FROM users");
         $totalUsers = $stmt->fetch()['total'];
         
-        // New users this month
         $stmt = $this->db->query("
             SELECT COUNT(*) as total FROM users 
             WHERE MONTH(created_at) = MONTH(CURDATE()) 
             AND YEAR(created_at) = YEAR(CURDATE())
         ");
         $newUsers = $stmt->fetch()['total'];
-        
-        // Total properties
+   
         $stmt = $this->db->query("SELECT COUNT(*) as total FROM properties WHERE status = 'active'");
         $totalProperties = $stmt->fetch()['total'];
         
-        // New properties this month
         $stmt = $this->db->query("
             SELECT COUNT(*) as total FROM properties 
             WHERE status = 'active'
@@ -37,11 +33,9 @@ class AdminController {
         ");
         $newProperties = $stmt->fetch()['total'];
         
-        // Total bookings
         $stmt = $this->db->query("SELECT COUNT(*) as total FROM bookings");
         $totalBookings = $stmt->fetch()['total'];
-        
-        // Active bookings
+
         $stmt = $this->db->query("
             SELECT COUNT(*) as total FROM bookings 
             WHERE status IN ('pending', 'confirmed') 
@@ -133,17 +127,14 @@ class AdminController {
     }
 
     private function exportXLSX($data, $startDate, $endDate) {
-        // Placeholder - would need PhpSpreadsheet library
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment; filename="homerent_export_' . $startDate . '_' . $endDate . '.xlsx"');
         echo json_encode(['error' => 'XLSX export requires PhpSpreadsheet library']);
     }
 
     private function exportPDF($data, $startDate, $endDate) {
-        // Placeholder - would need TCPDF or FPDF library
         header('Content-Type: application/pdf');
         header('Content-Disposition: attachment; filename="homerent_export_' . $startDate . '_' . $endDate . '.pdf"');
         echo json_encode(['error' => 'PDF export requires PDF library']);
     }
 }
-

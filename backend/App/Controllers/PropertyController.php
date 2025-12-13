@@ -11,6 +11,7 @@ class PropertyController {
     public function __construct() {
         $this->db = Database::getInstance()->getConnection();
     }
+    
 
     public function index() {
         $page = $_GET['page'] ?? 1;
@@ -58,7 +59,6 @@ class PropertyController {
         
         $orderBy = $this->getOrderBy($sortBy);
         
-        // Check availability if dates provided
         $availabilityJoin = "";
         if ($checkIn && $checkOut) {
             $availabilityJoin = "
@@ -345,6 +345,9 @@ class PropertyController {
         error_log('POST data: ' . print_r($_POST, true));
         error_log('FILES data: ' . print_r($_FILES, true));
         
+
+            $config = require __DIR__ . '/../../config/config.php';
+            
         $user = $_SESSION['user'] ?? null;
         if (!$user) {
             error_log('uploadImage: No user in session');
@@ -417,7 +420,6 @@ class PropertyController {
             }
         }
         
-        // Check if directory is writable
         if (!is_writable($uploadPath)) {
             error_log('Upload directory is not writable: ' . $uploadPath);
             error_log('Directory owner: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(fileowner($uploadPath))['name'] : 'unknown'));
@@ -466,7 +468,7 @@ class PropertyController {
         
         // Return URL relative to backend
         $baseUrl = $config['base_url'];
-        $imageUrl = $baseUrl . 'backend/uploads/' . $filename;
+        $imageUrl = $baseUrl . 'uploads/' . $filename;
         
         echo json_encode(['url' => $imageUrl]);
     }

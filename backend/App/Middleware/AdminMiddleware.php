@@ -6,10 +6,8 @@ use App\Services\AuthService;
 
 class AdminMiddleware {
     public function handle() {
-        // First check session (if user logged in via session)
         $user = $_SESSION['user'] ?? null;
         
-        // If no session user, try to get from JWT token
         if (!$user) {
             $authHeader = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
             if (empty($authHeader) && isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
@@ -49,4 +47,3 @@ class AdminMiddleware {
         return true;
     }
 }
-
