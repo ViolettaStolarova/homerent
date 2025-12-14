@@ -426,7 +426,6 @@ class PropertyController {
             error_log('Directory permissions: ' . substr(sprintf('%o', fileperms($uploadPath)), -4));
             error_log('Current user: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'unknown'));
             
-            // Try to make it writable with full permissions
             if (@chmod($uploadPath, 0777)) {
                 error_log('Successfully changed permissions to 0777');
             } else {
@@ -436,7 +435,6 @@ class PropertyController {
                 @chmod($uploadPath, 0777);
             }
             
-            // Check again
             if (!is_writable($uploadPath)) {
                 error_log('Still not writable after chmod attempt');
                 http_response_code(500);

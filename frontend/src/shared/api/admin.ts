@@ -43,6 +43,7 @@ export const adminApi = api.injectEndpoints({
 					return response.blob()
 				},
 			}),
+			invalidatesTags: [],
 		}),
 		blockUser: builder.mutation<
 			{ message: string },

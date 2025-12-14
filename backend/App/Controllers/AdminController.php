@@ -127,14 +127,34 @@ class AdminController {
     }
 
     private function exportXLSX($data, $startDate, $endDate) {
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment; filename="homerent_export_' . $startDate . '_' . $endDate . '.xlsx"');
-        echo json_encode(['error' => 'XLSX export requires PhpSpreadsheet library']);
+        // Временно используем CSV формат, пока не установлена библиотека PhpSpreadsheet
+        // TODO: Установить PhpSpreadsheet для полноценного экспорта XLSX
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="homerent_export_' . $startDate . '_' . $endDate . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['User ID', 'Email', 'Full Name', 'User Created', 'Property ID', 'Property Title', 'Property Created', 'Booking ID', 'Check In', 'Check Out', 'Total Price', 'Booking Status', 'Booking Created']);
+        
+        foreach ($data as $row) {
+            fputcsv($output, $row);
+        }
+        
+        fclose($output);
     }
 
     private function exportPDF($data, $startDate, $endDate) {
-        header('Content-Type: application/pdf');
-        header('Content-Disposition: attachment; filename="homerent_export_' . $startDate . '_' . $endDate . '.pdf"');
-        echo json_encode(['error' => 'PDF export requires PDF library']);
+        // Временно используем CSV формат, пока не установлена библиотека для PDF
+        // TODO: Установить библиотеку для генерации PDF (например, TCPDF или FPDF)
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="homerent_export_' . $startDate . '_' . $endDate . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['User ID', 'Email', 'Full Name', 'User Created', 'Property ID', 'Property Title', 'Property Created', 'Booking ID', 'Check In', 'Check Out', 'Total Price', 'Booking Status', 'Booking Created']);
+        
+        foreach ($data as $row) {
+            fputcsv($output, $row);
+        }
+        
+        fclose($output);
     }
 }
