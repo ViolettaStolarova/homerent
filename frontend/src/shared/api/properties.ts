@@ -45,7 +45,7 @@ export const propertiesApi = api.injectEndpoints({
 		}),
 		getProperty: builder.query<Property, number>({
 			query: id => `/properties/${id}`,
-			providesTags: (result, error, id) => [{ type: 'Property', id }],
+			providesTags: (_result, _error, id) => [{ type: 'Property', id }],
 		}),
 		createProperty: builder.mutation<
 			{ id: number; message: string },
@@ -67,7 +67,7 @@ export const propertiesApi = api.injectEndpoints({
 				method: 'PUT',
 				body: data,
 			}),
-			invalidatesTags: (result, error, { id }) => [{ type: 'Property', id }],
+			invalidatesTags: (_result, _error, { id }) => [{ type: 'Property', id }],
 		}),
 		deleteProperty: builder.mutation<{ message: string }, number>({
 			query: id => ({
@@ -77,7 +77,7 @@ export const propertiesApi = api.injectEndpoints({
 			invalidatesTags: ['Property'],
 		}),
 		uploadImage: builder.mutation<{ url: string }, File>({
-			queryFn: async (file, _queryApi, _extraOptions, fetchWithBQ) => {
+			queryFn: async (file, _queryApi, _extraOptions, _fetchWithBQ) => {
 				const formData = new FormData()
 				formData.append('image', file)
 				console.log(
