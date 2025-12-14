@@ -96,3 +96,40 @@
 		color: #666;
 	}
 }
+
+@media (max-width: 768px) {
+	.tab {
+		padding: 20px;
+	}
+
+	.header {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 15px;
+	}
+
+	.addButton {
+		width: 100%;
+		text-align: center;
+	}
+
+	.propertyCard {
+		flex-direction: column;
+	}
+
+	.image {
+		width: 100%;
+		height: 200px;
+	}
+
+	.actions {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.editButton,
+	.deleteButton {
+		width: 100%;
+		text-align: center;
+	}
+}

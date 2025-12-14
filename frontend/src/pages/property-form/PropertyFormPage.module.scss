@@ -150,3 +150,39 @@
 		background: #ff3b40;
 	}
 }
+
+@media (max-width: 768px) {
+	.formPage {
+		padding: 20px 0;
+	}
+
+	.container {
+		padding: 0 15px;
+	}
+
+	.title {
+		font-size: 24px;
+		margin-bottom: 20px;
+	}
+
+	.section {
+		padding: 20px;
+	}
+
+	.amenities {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+
+	.submitButton,
+	.removeButton {
+		width: 100%;
+		align-self: stretch;
+	}
+}
+
+@media (max-width: 480px) {
+	.amenities {
+		grid-template-columns: 1fr;
+	}
+}

@@ -1,52 +1,75 @@
 .homePage {
-  min-height: calc(100vh - 80px);
+	min-height: calc(100vh - 80px);
 }
 
 .hero {
-  background: #2b2d42;
-  color: #edf2f4;
-  padding: 60px 20px;
-  text-align: center;
+	background: #2b2d42;
+	color: #edf2f4;
+	padding: 60px 20px;
+	text-align: center;
 }
 
 .title {
-  font-size: 48px;
-  margin-bottom: 30px;
-  font-weight: bold;
+	font-size: 48px;
+	margin-bottom: 30px;
+	font-weight: bold;
 }
 
 .content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 40px 20px;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 40px 20px;
 }
 
 .sortBar {
-  margin-bottom: 30px;
-  display: flex;
-  justify-content: flex-end;
+	margin-bottom: 30px;
+	display: flex;
+	justify-content: flex-end;
 }
 
 .sortSelect {
-  padding: 10px 15px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  cursor: pointer;
+	padding: 10px 15px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 14px;
+	cursor: pointer;
 }
 
 .propertiesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  margin-bottom: 40px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 30px;
+	margin-bottom: 40px;
 }
 
 .loading,
 .empty {
-  text-align: center;
-  padding: 60px 20px;
-  font-size: 18px;
-  color: #666;
+	text-align: center;
+	padding: 60px 20px;
+	font-size: 18px;
+	color: #666;
 }
 
+@media (max-width: 768px) {
+	.hero {
+		padding: 40px 20px;
+	}
+
+	.title {
+		font-size: 32px;
+		margin-bottom: 20px;
+	}
+
+	.content {
+		padding: 20px 15px;
+	}
+
+	.sortBar {
+		justify-content: flex-start;
+	}
+
+	.propertiesGrid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+}

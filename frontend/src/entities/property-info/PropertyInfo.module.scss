@@ -157,3 +157,47 @@
 		background: #1a1c2e;
 	}
 }
+
+@media (max-width: 768px) {
+	.info {
+		gap: 20px;
+	}
+
+	.header {
+		flex-direction: column;
+		gap: 15px;
+	}
+
+	.title {
+		font-size: 24px;
+	}
+
+	.meta {
+		flex-wrap: wrap;
+		gap: 10px;
+	}
+
+	.price {
+		font-size: 24px;
+	}
+
+	.characteristics {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 15px;
+		padding: 15px 0;
+	}
+
+	.amenitiesList {
+		grid-template-columns: 1fr;
+	}
+
+	.mapFrame {
+		height: 300px;
+	}
+}
+
+@media (max-width: 480px) {
+	.characteristics {
+		grid-template-columns: 1fr;
+	}
+}

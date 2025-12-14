@@ -1,20 +1,30 @@
 .tab {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	background: white;
+	padding: 30px;
+	border-radius: 12px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .propertiesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 30px;
-  margin-top: 30px;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	gap: 30px;
+	margin-top: 30px;
 }
 
 .empty {
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
+	text-align: center;
+	padding: 60px 20px;
+	color: #666;
 }
 
+@media (max-width: 768px) {
+	.tab {
+		padding: 20px;
+	}
+
+	.propertiesGrid {
+		grid-template-columns: 1fr;
+		gap: 20px;
+	}
+}

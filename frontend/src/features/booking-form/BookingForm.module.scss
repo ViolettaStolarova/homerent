@@ -108,3 +108,17 @@
 	text-align: center;
 	margin-top: 10px;
 }
+
+@media (max-width: 768px) {
+	.bookingForm {
+		padding: 20px;
+	}
+
+	.price {
+		font-size: 24px;
+	}
+
+	.dates {
+		grid-template-columns: 1fr;
+	}
+}

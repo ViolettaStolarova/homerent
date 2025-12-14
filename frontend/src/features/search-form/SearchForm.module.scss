@@ -42,3 +42,25 @@
 		background: #1a1c2e;
 	}
 }
+
+@media (max-width: 768px) {
+	.form {
+		padding: 15px;
+	}
+
+	.fields {
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.priceRange {
+		grid-column: span 1;
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.button {
+		width: 100%;
+		padding: 14px;
+	}
+}

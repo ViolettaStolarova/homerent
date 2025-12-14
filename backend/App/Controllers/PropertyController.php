@@ -424,7 +424,7 @@ class PropertyController {
             error_log('Upload directory is not writable: ' . $uploadPath);
             error_log('Directory owner: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(fileowner($uploadPath))['name'] : 'unknown'));
             error_log('Directory permissions: ' . substr(sprintf('%o', fileperms($uploadPath)), -4));
-            error_log('Current user: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'unknown'));
+            // error_log('Current user: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'unknown'));
             
             if (@chmod($uploadPath, 0777)) {
                 error_log('Successfully changed permissions to 0777');
