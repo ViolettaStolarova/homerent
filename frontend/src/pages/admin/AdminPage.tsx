@@ -7,7 +7,7 @@ export function AdminPage() {
 	const [exportData, { isLoading: isExporting }] = useExportDataMutation()
 	const [startDate, setStartDate] = useState('')
 	const [endDate, setEndDate] = useState('')
-	const [format, setFormat] = useState<'csv' | 'xlsx' | 'pdf'>('csv')
+	const [format, setFormat] = useState<'csv'>('csv')
 
 	const handleExport = async () => {
 		if (!startDate || !endDate) {
@@ -110,8 +110,6 @@ export function AdminPage() {
 								onChange={e => setFormat(e.target.value as typeof format)}
 							>
 								<option value='csv'>CSV</option>
-								<option value='xlsx'>XLSX</option>
-								<option value='pdf'>PDF</option>
 							</select>
 						</div>
 						<button

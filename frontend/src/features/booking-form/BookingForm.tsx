@@ -56,7 +56,6 @@ export function BookingForm({ property, unavailableDates }: BookingFormProps) {
 				check_out: checkOut.toISOString().split('T')[0],
 				guests,
 			}).unwrap()
-			alert('Бронирование создано!')
 			setCheckIn(null)
 			setCheckOut(null)
 			setGuests(1)

@@ -24,7 +24,6 @@ class AuthController {
         } catch (\PDOException $e) {
             http_response_code(400);
             if ($e->getCode() == 23000) {
-                // Extract field name from error message
                 if (strpos($e->getMessage(), 'email') !== false) {
                     echo json_encode(['error' => 'Пользователь с данным email уже зарегистрирован']);
                 } elseif (strpos($e->getMessage(), 'username') !== false) {

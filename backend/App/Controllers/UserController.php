@@ -76,7 +76,6 @@ class UserController {
                 throw new \Exception('Old and new passwords are required');
             }
             
-            // Verify old password
             $stmt = $this->db->prepare("SELECT password FROM users WHERE id = ?");
             $stmt->execute([$user['id']]);
             $userData = $stmt->fetch();
@@ -87,7 +86,6 @@ class UserController {
                 return;
             }
             
-            // Update password
             $newPassword = password_hash($data['new_password'], PASSWORD_DEFAULT);
             $stmt = $this->db->prepare("UPDATE users SET password = ? WHERE id = ?");
             $stmt->execute([$newPassword, $user['id']]);
@@ -161,7 +159,6 @@ class UserController {
         $stmt->execute($params);
         $bookings = $stmt->fetchAll();
         
-        // Count unread bookings
         $countStmt = $this->db->prepare("
             SELECT COUNT(*) as count FROM bookings b
             JOIN properties p ON b.property_id = p.id
@@ -191,4 +188,3 @@ class UserController {
         return $nights * $pricePerNight;
     }
 }
-

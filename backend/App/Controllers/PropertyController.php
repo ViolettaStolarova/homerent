@@ -253,13 +253,11 @@ class PropertyController {
                 $id
             ]);
             
-            // Update amenities
             $this->db->prepare("DELETE FROM property_amenities WHERE property_id = ?")->execute([$id]);
             if (!empty($data['amenities'])) {
                 $this->saveAmenities($id, $data['amenities']);
             }
             
-            // Update images
             if (!empty($data['images'])) {
                 $this->db->prepare("DELETE FROM property_images WHERE property_id = ?")->execute([$id]);
                 $this->saveImages($id, $data['images']);
@@ -386,14 +384,10 @@ class PropertyController {
             return;
         }
         
-        // Use absolute path to uploads directory
-        // PropertyController is in App/Controllers, so go up to backend root
         $basePath = __DIR__ . '/../../uploads/';
         
-        // Resolve the path
         $resolvedPath = realpath(dirname($basePath));
         if ($resolvedPath === false) {
-            // Directory doesn't exist, try to create it
             $resolvedPath = dirname($basePath);
             if (!is_dir($resolvedPath)) {
                 if (!mkdir($resolvedPath, 0755, true)) {
@@ -408,7 +402,6 @@ class PropertyController {
         
         $uploadPath = $resolvedPath . '/uploads/';
         
-        // Create uploads directory if it doesn't exist
         if (!is_dir($uploadPath)) {
             if (!mkdir($uploadPath, 0777, true)) {
                 error_log('Failed to create upload directory: ' . $uploadPath);
@@ -424,7 +417,6 @@ class PropertyController {
             error_log('Upload directory is not writable: ' . $uploadPath);
             error_log('Directory owner: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(fileowner($uploadPath))['name'] : 'unknown'));
             error_log('Directory permissions: ' . substr(sprintf('%o', fileperms($uploadPath)), -4));
-            // error_log('Current user: ' . (function_exists('posix_getpwuid') ? posix_getpwuid(posix_geteuid())['name'] : 'unknown'));
             
             if (@chmod($uploadPath, 0777)) {
                 error_log('Successfully changed permissions to 0777');
@@ -464,7 +456,6 @@ class PropertyController {
             return;
         }
         
-        // Return URL relative to backend
         $baseUrl = $config['base_url'];
         $imageUrl = $baseUrl . 'uploads/' . $filename;
         
